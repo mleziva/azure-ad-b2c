@@ -331,3 +331,6 @@ ASALocalRun/
 
 #secret settings
 *secret.json
+
+#policy builds
+/src/B2CSample/SocialAndLocalAccounts/Environments/
