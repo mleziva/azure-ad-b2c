@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using B2CSample.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -32,6 +33,8 @@ namespace B2CSample
             {
                 c.SwaggerDoc("v1", new Info { Title = "B2C API", Version = "v1" });
             });
+
+            services.Configure<TotpSettings>(Configuration.GetSection("TotpSettings"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
