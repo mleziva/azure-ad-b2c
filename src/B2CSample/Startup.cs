@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace B2CSample
@@ -29,12 +30,12 @@ namespace B2CSample
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
+            services.Configure<TotpSettings>(Configuration.GetSection("TotpSettings"));
+
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Info { Title = "B2C API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "B2C API", Version = "v1" });
             });
-
-            services.Configure<TotpSettings>(Configuration.GetSection("TotpSettings"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

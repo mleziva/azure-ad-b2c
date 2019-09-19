@@ -17,8 +17,9 @@ using QRCoder;
 
 namespace AADB2C.RestoreUsername.API.Controllers
 {
-    [Route("api/[controller]/[action]")]
-    public class TotpController : Controller
+    [Route("api/[controller]")]
+    [ApiController]
+    public class TotpController : ControllerBase
     {
         private readonly TotpSettings AppSettings;
 
@@ -29,7 +30,8 @@ namespace AADB2C.RestoreUsername.API.Controllers
             this.AppSettings = appSettings.Value;
         }
 
-        [HttpPost(Name = "Generate")]
+        [Route("Generate")]
+        [HttpPost]
         public async Task<ActionResult> Generate()
         {
             string input = null;
@@ -92,7 +94,8 @@ namespace AADB2C.RestoreUsername.API.Controllers
             }
         }
 
-        [HttpPost(Name = "Verify")]
+        [Route("Verify")]
+        [HttpPost]
         public async Task<ActionResult> Verify()
         {
             string input = null;
@@ -166,7 +169,7 @@ namespace AADB2C.RestoreUsername.API.Controllers
             }
         }
 
-        public string EncryptAndBase64(string encryptString)
+        private string EncryptAndBase64(string encryptString)
         {
             string EncryptionKey = this.AppSettings.EncryptionKey;
             byte[] clearBytes = Encoding.Unicode.GetBytes(encryptString);
@@ -188,7 +191,7 @@ namespace AADB2C.RestoreUsername.API.Controllers
             return Convert.ToBase64String(Encoding.UTF8.GetBytes(encryptString));
         }
 
-        public string DecryptAndBase64(string cipherText)
+        private string DecryptAndBase64(string cipherText)
         {
             // Base64 decode
             cipherText = Encoding.UTF8.GetString(Convert.FromBase64String(cipherText));
