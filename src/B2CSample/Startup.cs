@@ -49,7 +49,8 @@ namespace B2CSample
             {
                 app.UseHsts();
             }
-
+            //to serve up the files under wwwroot
+            app.UseStaticFiles();
             app.UseHttpsRedirection();
             app.UseMvc();
             app.UseSwagger();
