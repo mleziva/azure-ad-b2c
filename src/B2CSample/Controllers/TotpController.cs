@@ -15,7 +15,7 @@ using Microsoft.IdentityModel.Tokens;
 using OtpSharp;
 using QRCoder;
 
-namespace AADB2C.RestoreUsername.API.Controllers
+namespace B2CSample.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -148,8 +148,7 @@ namespace AADB2C.RestoreUsername.API.Controllers
                 // For sign-up, the 'timeStepMatched' input claim is null and should not be evaluated 
                 // For sign-in, the 'timeStepMatched' input claim contains the last time last matched (from the user profile), and evaluated with 
                 // the value of the result of the TOTP out 'timeStepMatched' variable
-                if ((string.IsNullOrEmpty(inputClaims.TimeStepMatched) == false) &&
-                    !(inputClaims.TimeStepMatched).Equals(timeStepMatched.ToString()))
+                if (!string.IsNullOrEmpty(inputClaims.TimeStepMatched) &&  (inputClaims.TimeStepMatched).Equals(timeStepMatched.ToString()))
                 {
                     return StatusCode((int)HttpStatusCode.Conflict, new B2CResponseContent("The verification code has already been used.", HttpStatusCode.Conflict));
 
@@ -168,7 +167,15 @@ namespace AADB2C.RestoreUsername.API.Controllers
                 return StatusCode((int)HttpStatusCode.Conflict, new B2CResponseContent($"General error (REST API): {ex.Message}", HttpStatusCode.Conflict));
             }
         }
+        [Route("RegistrationPage")]
+        [HttpGet]
+        public ActionResult RegistrationPage()
+        {
+            var file = Path.Combine(Directory.GetCurrentDirectory(),
+                          "wwwroot", "selfasserted-appfactor-registration.html");
 
+            return PhysicalFile(file, "text/html");
+        }
         private string EncryptAndBase64(string encryptString)
         {
             string EncryptionKey = this.AppSettings.EncryptionKey;

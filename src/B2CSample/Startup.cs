@@ -28,9 +28,23 @@ namespace B2CSample
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll",
+                    builder =>
+                    {
+                        builder
+                        .AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials();
+                    });
+            });
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.Configure<TotpSettings>(Configuration.GetSection("TotpSettings"));
+            services.Configure<InviteSettings>(Configuration.GetSection("InviteSettings"));
 
             services.AddSwaggerGen(c =>
             {
@@ -51,6 +65,8 @@ namespace B2CSample
             }
             //to serve up the files under wwwroot
             app.UseStaticFiles();
+            app.UseCors("AllowAll");
+
             app.UseHttpsRedirection();
             app.UseMvc();
             app.UseSwagger();
