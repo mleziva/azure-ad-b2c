@@ -59,5 +59,32 @@ namespace B2CSample.Controllers
             // Return the output claim(s)
             return Ok(outputClaims);
         }
+        //simulates validating credentials and getting user data from an external store outside of azure
+        [Route("signin")]
+        [HttpPost]
+        public ActionResult<SignInResponseContent> SignIn([FromBody]SignInInput signInInput)
+        {
+            if (signInInput == null)
+            {
+                return StatusCode((int)HttpStatusCode.Conflict, new B2CResponseContent("Can not deserialize input claims", HttpStatusCode.BadRequest));
+            }
+            if (signInInput.Email.ToLower().Contains("test2"))
+            {
+                return StatusCode((int)HttpStatusCode.BadRequest, new B2CResponseContent("Test name is not valid, please provide a valid name", HttpStatusCode.BadRequest));
+            }
+            SignInResponseContent outputClaims = new SignInResponseContent()
+            {
+                DisplayName = "User Test 1",
+                Email = signInInput.Email,
+                Firstname = "User1",
+                Lastname = "Test1",
+                ValidCreds = "true"
+            };
+            if (signInInput.Email.ToLower().Contains("invalidcreds") || signInInput.Password.ToLower().Contains("wrong"))
+            {
+                outputClaims.ValidCreds = "false";
+            }
+            return Ok(outputClaims);
+        }
     }
 }
